@@ -1,0 +1,21 @@
+{
+  "name": "js-game-framework",
+  "homepage": "https://github.com/miriti/js-game-framework",
+  "authors": [
+    "Michael Miriti <michael@miriti.ru>"
+  ],
+  "description": "javascript framework for games",
+  "main": "framework.js",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "js"
+  ],
+  "ignore": [],
+  "license": "MIT",
+  "dependencies": {
+    "pixi.js": "~3.0.9",
+    "requirejs": "~2.1.22"
+  }
+}
