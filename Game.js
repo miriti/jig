@@ -1,6 +1,6 @@
 define([
   './LoadingScreen',
-  '.utils',
+  './utils',
   'pixi'
 ], function(LoadingScreen,
             utils,
