@@ -4,9 +4,6 @@ var fs = require('fs');
 
 var exec = require('child_process').execSync;
 
-exec("npm install");
-exec("bower install");
-
 var template = process.argv[2] || 'default';
 var template_base = __dirname + '/_templates/' + template;
 
@@ -24,7 +21,8 @@ try {
 
 var populate = function(str) {
   for(var v in variables) {
-    str = str.replace('%' + v + '%', variables[v]);
+    var rv = '%' + v + '%';
+    str = str.split(rv).join(variables[v]);
   }
   
   return str;
