@@ -1,8 +1,13 @@
 define([
   './LoadingScreen',
+  '.utils',
   'pixi'
 ], function(LoadingScreen,
+            utils,
             PIXI) {
+
+  window.extend = utils.extend;
+
   var Game = function(width, height, virtualWidth, virtualHeight, container) {
     Game.I = window.Game = this;
     
