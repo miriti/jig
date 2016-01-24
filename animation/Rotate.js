@@ -1,9 +1,7 @@
 define([
-  '../utils',
   '../Animation'
 ],
-function(utils,
-            Animation) {
+function(Animation) {
   var Rotate = function(from, to, totalTime, easing) {
     Animation.call(this, totalTime, easing);
     
@@ -11,7 +9,7 @@ function(utils,
     this.to = to;
   };
   
-  utils.extend(Rotate, Animation);
+  extend(Rotate, Animation);
   
   Rotate.prototype.update = function(subject, delta) {
     if(!this.isFinished(delta)) {

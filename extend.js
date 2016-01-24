@@ -1,10 +1,5 @@
-define([
-  './ComponentContainer'
-],
-function(ComponentContainer) {
-  var utils = {};
-
-  utils.extend = function(a, b) {
+define(['./ComponentContainer'], function(ComponentContainer) {
+  var extend = function(a, b) {
     a.prototype = Object.create(b.prototype);
     
     if(b !== ComponentContainer) {
@@ -19,6 +14,8 @@ function(ComponentContainer) {
 
     return a;
   };
-
-  return utils;
+  
+  window.extend = window.extend || extend;
+  
+  return extend;
 });

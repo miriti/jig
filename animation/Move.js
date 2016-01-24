@@ -1,9 +1,7 @@
 define([
-  '../utils',
   '../Animation'
 ],
-function(utils,
-         Animation) {
+function(Animation) {
   var Move = function(from, to, totalTime, easing) {
     Animation.call(this, totalTime, easing);
     
@@ -11,7 +9,7 @@ function(utils,
     this.to = to ? new PIXI.Point(to[0], to[1]) : null;
   };
   
-  utils.extend(Move, Animation);
+  extend(Move, Animation);
   
   Move.prototype.update = function(subject, delta) {
     if(!this.isFinished(delta)) {

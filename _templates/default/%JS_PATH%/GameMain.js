@@ -1,4 +1,7 @@
-define(['framework/Container'], function(Container) {
+define([
+  'framework/Container'
+],
+function(Container) {
   var GameMain = function() {
     Container.call(this);
   };

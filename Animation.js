@@ -1,11 +1,11 @@
 define([
-  './utils',
+  './extend',
   './components/Updatable',
   './components/Events',
   './ComponentContainer',
   './Easing'
 ],
-function(utils,
+function(extend,
          Updatable,
          Events,
          ComponentContainer,
@@ -17,7 +17,7 @@ function(utils,
     
     this.totalTime = totalTime || 1;
     
-    this.easing = easing || Easing.liniar;
+    this.easing = easing || Easing.default;
     
     this.finished = false;
     
@@ -26,7 +26,7 @@ function(utils,
     this.t = 0;
   };
   
-  utils.extend(Animation, ComponentContainer);
+  extend(Animation, ComponentContainer);
   
   Animation.prototype.isFinished = function(delta) {
     if(this.finished) {

@@ -1,12 +1,12 @@
 define([
-  '../utils',
   './Move'
-], function(utils, Move) {
+],
+function(Move) {
   var MoveTo = function(x, y, totalTime, easing) {
     Move.call(this, undefined, [x, y], totalTime, easing);
   };
 
-  utils.extend(MoveTo, Move);
+  extend(MoveTo, Move);
 
   MoveTo.prototype.update = function(subject, delta) {
     if (this.from === null) {

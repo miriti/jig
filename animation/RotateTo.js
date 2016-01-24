@@ -1,12 +1,12 @@
 define([
-  '../utils',
   './Rotate'
-], function(utils, Rotate) {
+],
+function(Rotate) {
   var RotateTo = function(to, totalTime, easing) {
     Rotate.call(this, null, to, totalTime, easing);
   };
 
-  utils.extend(RotateTo, Rotate);
+  extend(RotateTo, Rotate);
 
   RotateTo.prototype.update = function(subject, delta) {
     if (this.from === null) {

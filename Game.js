@@ -1,15 +1,19 @@
 define([
-  './LoadingScreen',
-  './utils',
-  'pixi'
-], function(LoadingScreen,
-            utils,
-            PIXI) {
-
-  window.extend = utils.extend;
+  'pixi',
+  './extend',
+  './index',
+  './LoadingScreen'
+],
+function(PIXI,
+        extend,
+        framework,
+        LoadingScreen) {
 
   var Game = function(width, height, virtualWidth, virtualHeight, container) {
-    Game.I = window.Game = this;
+    if(window.game) {
+      console.warn("There is already a Game instance");
+    }
+    window.game = this;
     
     /** width of the game */
     this.width = width || 800;
@@ -37,9 +41,9 @@ define([
     window.onkeydown = this.keyDown.bind(this);
     window.onkeyup = this.keyUp.bind(this);
     window.onkeypress = this.keyPress.bind(this);
+    
+    this.gameContainer = new framework.Container();
   };
-  
-  Game.I = null;
 
   /**
    * Configure the game
@@ -91,7 +95,11 @@ define([
    * Set current state
    */
   Game.prototype.setState = function(state) {
+    if(this.currentState) {
+      this.gameContainer.removeChild(this.currentState);
+    }
     this.currentState = state;
+    this.gameContainer.addChild(this.currentState);
     this.resize();
     return this;
   };
@@ -130,19 +138,16 @@ define([
       this.height = window.innerHeight;
 
       if(this.virtualWidth && this.virtualHeight) {
-        scale = this.width / this.virtualWidth;
-        if(this.currentState) {
-          this.currentState.scale.set(scale);
-        }
+        scale = Math.min(this.height/this.virtualHeight, this.width / this.virtualWidth);
+        this.gameContainer.scale.set(scale);
       }
 
       this.renderer.resize(this.width, this.height);
     }
 
     if (this.centered) {
-      if (this.currentState) {
-        this.currentState.position.set(this.width / 2, this.height / 2);
-      }
+      this.gameContainer.position.set(this.width / 2, this.height / 2);
+        
       if(this.loadingScreen) {
         this.loadingScreen.position.set(this.width / 2, this.height / 2);
       }
@@ -157,6 +162,7 @@ define([
     
     this.loader.on('progress', (function(loader, resource) {
       if(this.loadingScreen) {
+        this.resize();
         this.loadingScreen.progress(loader);
         this.renderer.render(this.loadingScreen);
       }
@@ -165,7 +171,8 @@ define([
     this.loader.on('complete', (function(loader, resources) {
         this.resources = resources;
         this.resize();
-        callback.call(this);
+        if(callback)
+          callback.call(this);
         requestAnimationFrame(this.loop.bind(this));
       }).bind(this));
     
@@ -184,10 +191,8 @@ define([
     this.prevTime = currentTime;
 
     if(this.currentState) {
-      if(this.currentState['update']) {
-        this.currentState.update(delta);
-      }
-      this.renderer.render(this.currentState);
+      this.gameContainer.update(delta);
+      this.renderer.render(this.gameContainer);
     }
 
     requestAnimationFrame(this.loop.bind(this));

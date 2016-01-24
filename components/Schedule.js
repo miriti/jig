@@ -57,7 +57,7 @@ define([], function() {
       var task = this._schedule['every'][i];
       
       if(task.prevCall >= task.time) {
-        task.callback.call();
+        task.callback.call(this);
         task.prevCall = 0;
       } else {
         task.prevCall += delta;
@@ -68,7 +68,7 @@ define([], function() {
       var task =this._schedule['after'][i];
       
       if(task.time <= 0) {
-        task.callback.call();
+        task.callback.call(this);
         this.killTask(task);
       } else {
         task.time -= delta;
