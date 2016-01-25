@@ -36,6 +36,7 @@ function(PIXI,
     this.resources = null;
 
     this._stateStack = [];
+    this._savedStates = {};
 
     window.onresize = this.resize.bind(this);
     window.onkeydown = this.keyDown.bind(this);
@@ -94,13 +95,22 @@ function(PIXI,
   /**
    * Set current state
    */
-  Game.prototype.setState = function(state) {
+  Game.prototype.setState = function(state, name) {
+    if(this._savedStates[state]) {
+      state = this._savedStates[state];
+    }
+    
     if(this.currentState) {
       this.gameContainer.removeChild(this.currentState);
     }
     this.currentState = state;
     this.gameContainer.addChild(this.currentState);
     this.resize();
+    
+    if(name) {
+      this._savedStates[name] = state;
+    }
+    
     return this;
   };
   
