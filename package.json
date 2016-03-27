@@ -1,24 +1,27 @@
 {
-  "name": "js-game-framework",
+  "name": "jig",
   "version": "1.0.0",
-  "description": "",
-  "main": "framework.js",
+  "description": "jig is a javascript framework for game prototyping",
+  "main": "init",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "init": "./init"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/miriti/js-game-framework.git"
+    "url": "git+https://github.com/miriti/jig.git"
   },
   "author": "Michael Miriti",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/miriti/js-game-framework/issues"
+    "url": "https://github.com/miriti/jig/issues"
   },
-  "homepage": "https://github.com/miriti/js-game-framework#readme",
+  "homepage": "https://github.com/miriti/jig#readme",
   "dependencies": {
+    "bower": "^1.7.7",
     "gulp": "^3.9.0",
     "gulp-webserver": "^0.9.1",
-    "js-beautify": "^1.5.10"
+    "js-beautify": "^1.5.10",
+    "npm": "^3.8.3",
+    "prompt": "^1.0.0"
   }
 }

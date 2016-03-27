@@ -1,5 +1,5 @@
 define([
-  'framework/Container'
+  'jig/Container'
 ],
 function(Container) {
   var GameMain = function() {

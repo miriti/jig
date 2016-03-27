@@ -1,11 +1,11 @@
 {
   "name": "js-game-framework",
-  "homepage": "https://github.com/miriti/js-game-framework",
+  "homepage": "https://github.com/miriti/jig",
   "authors": [
     "Michael Miriti <michael@miriti.ru>"
   ],
   "description": "javascript framework for games",
-  "main": "framework.js",
+  "main": "init",
   "moduleType": [
     "amd"
   ],

@@ -5,7 +5,7 @@ require.config({
 })
 
 define([
-  'framework/Game',
+  'jig/Game',
   './GameMain'
 ],
 function(Game,
