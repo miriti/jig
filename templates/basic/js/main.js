@@ -6,12 +6,19 @@ require.config({
 
 define([
   'jig/Game',
-  './GameMain'
+  './GameMain',
+  './data'
 ],
 function(Game,
-         GameMain) {
-  new Game(1920, 1080)
-    .config({responsive: true})
-    .setState(new GameMain())
-    .run();
+         GameMain,
+         data) {
+  new Game()
+    .config({
+      width: 1920,
+      height: 1080,
+      responsive: true,
+    })
+    .data(data)
+    .run()
+    .setState(new GameMain());
 });
