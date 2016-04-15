@@ -18,7 +18,7 @@ JIG is using [PIXI.js](https://github.com/pixijs/pixi.js) as a rendering engine 
 3. Run `npm install` to install all the node.js dependencies
 4. Run `./init [template-name] [project-path]` to initialize a project based on `[template-name]` template. See the list of templates in the according directory of the framework. Example: `./init basic /home/username/my-cool-game`. Follow the instructions.
 5. Navigate to the `[project-path]` and run `gulp` to run the webserver and be able to test your game.
-6. Open `http://localhost:8080/` in your browser
+6. Open `http://localhost:8080/` (port can be changed in the `gulpfile.js`) in your browser
 7. Start working on your game!
 
 ## Examples
