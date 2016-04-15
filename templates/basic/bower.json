@@ -14,6 +14,6 @@
   "dependencies": {
     "jig": "%JIG_PATH%/",
     "requirejs": "^2.2.0",
-    "pixi.js": "^3.0.10",
+    "pixi.js": "^3.0.10"
   }
 }
