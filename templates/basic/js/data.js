@@ -1,3 +1,3 @@
-defing([], function() {
+define([], function() {
   return {};
 })
