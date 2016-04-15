@@ -1,0 +1,3 @@
+defing([], function() {
+  return {};
+})
