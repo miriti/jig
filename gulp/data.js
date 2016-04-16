@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var file = require('gulp-file');
+var watch = require('gulp-watch');
 
 module.exports = function() {
   watch('data/**/*').on('data', function(data) {
