@@ -7,18 +7,19 @@ var spawn = require('child_process').spawn;
 
 if ((process.argv[2] && (['-h', '--help', '/?'].indexOf(process.argv[2]) != -1)) || (process.argv.length == 2)) {
   var help = [
-    "JIG project initialization utility",
+    "JIG initialization utility",
     "Usage:",
-    "./init basic [project-path] \t initialize project in [project path] using 'basic' template",
-    "./init --help \t\t\t display this information",
-    "./init --info [template-name] \t display information about the specific template"
+    "./init [template-name] [project-path]\n\tInitialize a project in [project path] using '[template-name]' template",
+    "./init [template-name] [project-path] --developer\n\tInitialize a project for JIG developer.",
+    "./init --help \n\tDisplay this information",
+    "./init --info [template-name]\n\tDisplay information about the specific template"
   ];
-  
-  console.log(help.join("\n"));
+
+  console.log(help.join("\n\n"));
   process.exit();
 }
 
-if(process.argv[2] && (process.argv[2] === '--info')) {
+if (process.argv[2] && (process.argv[2] === '--info')) {
   console.log("TODO");
   process.exit();
 }
@@ -26,6 +27,7 @@ if(process.argv[2] && (process.argv[2] === '--info')) {
 var template = process.argv[2] || 'basic';
 var target_dir = process.argv[3] || process.cwd();
 var template_base = __dirname + path.sep + 'templates' + path.sep + template;
+var developer = process.argv.indexOf('--developer') != -1;
 
 var variables = {
   'GAME_NAME': 'JIG Game',
@@ -35,11 +37,11 @@ var variables = {
 };
 
 var populate = function(str) {
-  for(var v in variables) {
+  for (var v in variables) {
     var rv = '%' + v + '%';
     str = str.split(rv).join(variables[v]);
   }
-  
+
   return str;
 }
 
@@ -47,62 +49,69 @@ var init_game = function() {
   try {
     fs.accessSync(target_dir, fs.F_OK);
     console.warn('WARNING: Directory <%s> already exists!', target_dir);
-  } catch(e) {
+  } catch (e) {
     try {
       fs.mkdirSync(target_dir);
-    } catch(e) {
+    } catch (e) {
       console.err("Couldn't create directory [%s]!", target_dir);
     }
   }
 
   var dive = function(dir, callback) {
-    var dir_filter = function(d) { return d != '.' };
-    
+    var dir_filter = function(d) {
+      return (d != '.') && (d != '');
+    };
+
     fs.readdir([template_base, dir].join(path.sep), function(error, list) {
       var done_counter = list.length;
-      
-      if(done_counter == 0) {
+
+      if (done_counter == 0) {
         callback.call();
       }
-      
+
       list.forEach(function(item) {
         var absolut_path = [template_base, dir, item].filter(dir_filter).join(path.sep);
 
         fs.stat(absolut_path, function(err, stat) {
           if (stat.isDirectory()) {
             var dirname = populate([target_dir, dir, item].filter(dir_filter).join(path.sep));
-            
-            if(!fs.existsSync(dirname)) {
+
+            if (!fs.existsSync(dirname)) {
               try {
                 fs.mkdirSync(dirname);
-                console.log('MKDIR', dirname, '[OK]')
+                console.log("\x1b[32m%s\x1b[0m %s", "MKDIR", dirname)
               } catch (e) {
-                console.error('MKDIR', dirname, '[FAILED]');
+                console.error("\x1b[31m%s\x1b[0m %s", "MKDIR FAILED", dirname);
               }
             }
-            
+
             dive(dir + path.sep + item, function() {
               done_counter--;
-              
-              if(done_counter == 0) {
+
+              if (done_counter == 0) {
                 callback.call();
               }
             });
           } else {
             fs.readFile(absolut_path, function(err, content) {
               var final = populate(content.toString());
+
+              while ((dir[0] == '.') || (dir[0] == path.sep)) {
+                dir = dir.substr(1);
+              }
+
               var writePath = populate([target_dir, dir, item].filter(dir_filter).join(path.sep));
 
               fs.writeFile(writePath, final, function(err) {
                 if (err) {
-                  console.error('WRITE', writePath, '[FAILED]');
+                  console.error("\x1b[31m%s\x1b[0m %s", "WEITE FAILED", writePath);
                 } else {
-                  console.log('WRITE', writePath, '[OK]');
+                  console.log("\x1b[32mWRITE\x1b[0m %s", writePath);
                 }
-                
+
                 done_counter--;
-                
-                if(done_counter == 0) {
+
+                if (done_counter == 0) {
                   callback.call();
                 }
               })
@@ -116,23 +125,40 @@ var init_game = function() {
   dive(".", function() {
     console.log("All files are copied.");
     console.log("Installing bower dependencies...");
-    
-    var bower = spawn('bower', ['install', '-s'], {cwd: target_dir});
-    
+
+    var bower = spawn('bower', ['install', '-s'], {
+      cwd: target_dir
+    });
+
     bower.stdout.pipe(process.stdout);
-    
+    bower.stderr.pipe(process.stderr);
+
     bower.on('close', function(code) {
-      if(code == 0) {
-        console.log("bower dependencies installed (code %d)", code);
+      if (code == 0) {
+        if (developer) {
+          var rimraf = require('rimraf');
+          console.log("!! Developer mode. Removing installed jig with a symlink");
+          rimraf(target_dir + "/js/jig", function() {
+            console.log("copied jig removed");
+            fs.symlink(__dirname, target_dir + "/js/jig", 'dir', function() {
+              console.log("symlink created");
+            });
+          });
+        }
+
+        console.log("bower dependencies installed");
         console.log("Installing node.js dependencies...");
-        
-        var npm = spawn('npm', ['install'], {cwd: target_dir});
-        
+
+        var npm = spawn('npm', ['install'], {
+          cwd: target_dir
+        });
+
         npm.stdout.pipe(process.stdout);
-        
+        npm.stderr.pipe(process.stderr);
+
         npm.on('close', function(code) {
-          if(code == 0) {
-            console.log("Your project is ready! 'cd' to the directory of your project and run 'gulp' to start a webserver (code: %d)", code);
+          if (code == 0) {
+            console.log("\x1b[32m%s\x1b[0m", "\nYour project is ready! 'cd' to the directory of your project and run 'gulp' to start a webserver\n");
           } else {
             console.error("Something gone wrong while installing node.js dependencies...");
           }
@@ -168,14 +194,14 @@ prompt.get({
     throw err;
     return;
   }
-  
+
   if ((result.length) && (result.create[0].toLowerCase() !== 'y')) {
     return;
   }
-  
+
   target_dir = result.target_dir;
   variables['GAME_NAME'] = result.game_name;
   variables['AUTHOR'] = result.author_name;
-  
+
   init_game();
 });
