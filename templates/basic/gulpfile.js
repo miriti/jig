@@ -1,13 +1,7 @@
 var gulp = require('gulp');
-var webserver = require('gulp-webserver');
-var watch = require('gulp-watch');
-var beutify = require('js-beautify');
-var file = require('gulp-file');
 
-gulp.task('data', require('./js/jig/gulp/data.js'));
+var data = require('./js/jig/gulp/data.js');
+var webserver = require('./js/jig/gulp/webserver.js');
 
-gulp.task('default', function() {
-  gulp.src('.').pipe(webserver({
-    port: 8000
-  }));
-});
+gulp.task('data', data);
+gulp.task('default', ['data'], webserver);
